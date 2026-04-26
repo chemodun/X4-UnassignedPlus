@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- English -->
+<diff>
+    <add sel="/language">
+        <page id="1972092421" title="Unassigned Plus" descr="" voice="no">
+            <!-- mod identity -->
+            <t id="1">Unassigned Plus</t>
+            <t id="2">Adds auto-folder grouping to unassigned ships by Type \(Fight, Trade, Mine, Salvage, Build, Auxiliary\), Size, Order, or combinations of all three.</t>
+
+            <!-- dropdown label (100) -->
+            <t id="100">Group by:</t>
+            <!-- dropdown option labels are composed in Lua from vanilla texts:
+                 Type={1001,6400}  Size={1001,8026}  Order={30611,1304}  None={1042,10011} -->
+            <!-- collapsible checkbox label (101) -->
+            <t id="101">Collapsible:</t>
+            <!-- hierarchical checkbox label (102) -->
+            <t id="102">Hierarchical:</t>
+            <!-- grouped section header (103) -->
+            <t id="103">Grouped</t>
+
+            <!-- purpose group label for "neutral" (125); all other type names come from vanilla page 20213 -->
+            <t id="125">Other</t>
+
+            <!-- size group labels (130-134) -->
+            <t id="130">Extra Small \(XS\)</t>
+            <t id="131">Small \(S\)</t>
+            <t id="132">Medium \(M\)</t>
+            <t id="133">Large \(L\)</t>
+            <t id="134">Extra Large \(XL\)</t>
+
+            <!-- order fallback label (140) -->
+            <t id="140">Standby</t>
+
+            <!-- status messages (1000+) -->
+            <t id="1000">No unassigned ships</t>
+        </page>
+    </add>
+</diff>
