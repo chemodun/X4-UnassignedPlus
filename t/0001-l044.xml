@@ -33,6 +33,9 @@
 
             <!-- status messages (1000+) -->
             <t id="1000">No unassigned ships</t>
+
+            <!-- settings labels (90000+) -->
+            <t id="90001">Hide Original Unassigned Ships Tab</t>
         </page>
     </add>
 </diff>

@@ -21,4 +21,5 @@
     <!-- Spanish -->
     <text language="34"
         description="Anade una pestana No asignados (Agrupados) al menu de Propiedad. Los barcos se pueden agrupar automaticamente por Proposito, Tamano o combinaciones." />
+    <dependency id="chem_options_helper" />
 </content>

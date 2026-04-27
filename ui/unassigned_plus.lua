@@ -14,6 +14,8 @@ local ffi = require("ffi")
 local C   = ffi.C
 
 ffi.cdef[[
+  typedef uint64_t UniverseID;
+
   typedef struct {
     int major;
     int minor;
@@ -44,12 +46,13 @@ ffi.cdef[[
   bool        GetDefaultOrder(Order* result, UniverseID controllableid);
   GameVersion GetGameVersion(void);
   bool        GetOrderDefinition(OrderDefinition* result, const char* orderdefid);
+  UniverseID  GetPlayerID(void);
 ]]
 
 -- *** constants ***
 
 local PAGE_ID  = 1972092421
-local MODE     = "autoFoldersUnassigned"
+local MODE     = "UnassignedPlus"
 local TAB_ICON = "mapst_ol_unassigned"
 
 -- Canonical sort order for each dimension.
@@ -64,6 +67,8 @@ local usf = {
   menuMap       = nil,
   menuMapConfig = {},
   isV9          = C.GetGameVersion().major >= 9,
+  -- Set in Init once the player entity is available.
+  playerId      = nil,
 
   -- Current grouping selection (persists for the game session).
   groupingMode  = "none",
@@ -79,6 +84,10 @@ local usf = {
   -- Per-ship enrichment data, keyed by tostring(luaId).
   -- Populated by enrichShipData (on_every_playerobject); consumed by buildGroups.
   shipData      = {},
+
+  -- Vanilla "unassignedships" tab entry saved while it is hidden.
+  -- nil means the tab is currently visible in propertyCategories.
+  hiddenVanillaTab = nil,
 }
 
 -- *** debug helpers ***
@@ -334,29 +343,79 @@ function usf.setupTab()
     return
   end
 
-  -- Insert directly after "unassignedships" tab, or after the last non-custom_tab.
-  local insertAfter = nil
-  local fallbackIdx = nil
+  -- Read saved config to check the hide-original-tab setting.
+  local savedCfg   = GetNPCBlackboard(usf.playerId, "$unassignedPlusConfig") or {}
+  local shouldHide = savedCfg["hideOriginalTab"] == 1
+
+  -- Scan categories: find our tab (bail if already registered), vanilla tab index,
+  -- and the best insertion anchors for our own tab.
+  local insertAfter  = nil
+  local insertBefore = nil
+  local fallbackIdx  = nil
+  local vanillaTabIdx = nil
+  local alreadyRegistered = false
+  local existingIdx = nil
   for i, cat in ipairs(categories) do
     if cat.category == MODE then
       debug("tab already registered")
-      return
+      alreadyRegistered = true
+      existingIdx = i
+    end
+    if cat.category == "fleets" then
+      insertAfter = i
     end
     if cat.category == "unassignedships" then
-      insertAfter = i
+      vanillaTabIdx = i
+      insertAfter   = i
+    end
+    if cat.category == "inventoryships" then
+      insertBefore = i
     end
     if string.sub(cat.category, 1, 10) ~= "custom_tab" then
       fallbackIdx = i
     end
   end
 
-  local idx = insertAfter or fallbackIdx
-  if idx then
-    table.insert(categories, idx + 1, {
-      category = MODE,
-      name     = ReadText(PAGE_ID, 1),
-      icon     = TAB_ICON,
-    })
+  local newTabConfig = {
+    category = MODE,
+    name     = ReadText(PAGE_ID, 1),
+    icon     = TAB_ICON,
+  }
+  -- Record whether the vanilla tab was already absent (hidden by another mod).
+  -- The options checkbox reads this flag to decide whether to render itself as inactive.
+  savedCfg["vanillaTabAlreadyHidden"] = (vanillaTabIdx == nil and usf.hiddenVanillaTab == nil) and 1 or 0
+  SetNPCBlackboard(usf.playerId, "$unassignedPlusConfig", savedCfg)
+
+  if shouldHide then
+    -- If the vanilla tab is present and the user chose to hide it, remove it now.
+    -- Adjust the tracked insertion indices to account for the removed entry.
+    if vanillaTabIdx ~= nil then
+      usf.hiddenVanillaTab = categories[vanillaTabIdx]
+      if alreadyRegistered then
+        table.remove(categories, vanillaTabIdx)
+      else
+        categories[vanillaTabIdx] = newTabConfig
+      end
+      return
+    end
+  elseif alreadyRegistered and existingIdx then
+    if vanillaTabIdx == nil and usf.hiddenVanillaTab ~= nil then
+      table.insert(categories, existingIdx, usf.hiddenVanillaTab)
+      usf.hiddenVanillaTab = nil
+    end
+  else
+    local idx = insertAfter or fallbackIdx
+    if insertBefore and (not idx or insertBefore <= idx) then
+      idx = insertBefore - 1
+    end
+    if idx then
+      table.insert(categories, idx + 1, newTabConfig)
+      if vanillaTabIdx == nil and usf.hiddenVanillaTab ~= nil then
+        -- The vanilla tab was previously hidden by our mod, restore it now.
+        table.insert(categories, idx + 1, usf.hiddenVanillaTab)
+        usf.hiddenVanillaTab = nil
+      end
+    end
   end
 end
 
@@ -626,6 +685,7 @@ local function Init()
 
   usf.menuMap       = menuMap
   usf.menuMapConfig = menuMap.uix_getConfig() or {}
+  usf.playerId      = ConvertStringTo64Bit(tostring(C.GetPlayerID()))
 
   menuMap.registerCallback(
     "createPropertyOwned_on_every_playerobject",
@@ -635,6 +695,8 @@ local function Init()
     usf.displayTabData)
 
   usf.setupTab()
+
+  RegisterEvent("UnassignedPlus.ConfigChanged", usf.setupTab)
 end
 
 Register_OnLoad_Init(Init)
