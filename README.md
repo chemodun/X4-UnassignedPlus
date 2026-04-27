@@ -22,10 +22,13 @@ Adds an **Unassigned Plus** tab to the **Property Owned** menu in the map, place
 - **Mod Support APIs**: Version 1.95 or higher by [SirNukes](https://next.nexusmods.com/profile/sirnukes?gameId=2659):
   - Available on Steam: [SirNukes Mod Support APIs](https://steamcommunity.com/sharedfiles/filedetails/?id=2042901274)
   - Available on Nexus Mods: [Mod Support APIs](https://www.nexusmods.com/x4foundations/mods/503).
+- **Options Helper**: Version 1.0 or higher by [Chem O`Dun](https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659):
+  - Available on Steam: [Options Helper](https://steamcommunity.com/sharedfiles/filedetails/?id=3715253556)
+  - Available on Nexus Mods: [Options Helper](https://www.nexusmods.com/x4foundations/mods/2089)
 
 ## Installation
 
-- **Steam Workshop**: [Unassigned Plus](https://steamcommunity.com/sharedfiles/filedetails/?id=0)
+- **Steam Workshop**: [Unassigned Plus](https://steamcommunity.com/sharedfiles/filedetails/?id=3715487702)
 - **Nexus Mods**: [Unassigned Plus](https://www.nexusmods.com/x4foundations/mods/2090)
 
 ## Usage
