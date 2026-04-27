@@ -478,6 +478,12 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
   local fontSize  = cfg.mapFontSize   or Helper.standardFontSize
   local noneText  = "-- " .. ReadText(1001, 34) .. " --"
 
+  if usf.isV9 then
+    ftable.columndata[1].width = ftable.columndata[1].width + 4 * Helper.standardContainerOffset
+    ftable.columndata[#ftable.columndata].width = ftable.columndata[#ftable.columndata].width + 4 * Helper.standardContainerOffset
+    ftable.columndata[2].width = ftable.columndata[2].width - 8 * Helper.standardContainerOffset
+  end
+
   -- *** Row 1: "Group by:" label + grouping dropdown ***
   local dropdownRow = ftable:addRow("usf_grouping_dropdown", { fixed = true })
   dropdownRow[1]:setColSpan(2):createText(
@@ -554,7 +560,7 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
         if v == false then allExpanded = false; break end
       end
       local grow = ftable:addRow("usf_grouped_header", Helper.headerRowProperties)
-      grow[1]:createButton():setText(allExpanded and "-" or "+", { halign = "center" })
+      grow[1]:createButton({ width = rowHeight }):setText(allExpanded and "-" or "+", { halign = "center" })
       grow[1].handlers.onClick = function()
         if allExpanded then
           -- Collapse all: mark every known group key as collapsed.
@@ -601,11 +607,12 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
     end
 
     -- Render one group-header row with optional +/- toggle button and left-aligned label.
-    local function renderGroupHeader(partialKey, label, isExpanded)
+    -- container: the table or rowGroup to add the row into.
+    local function renderGroupHeader(container, partialKey, label, isExpanded)
       local headerRow
       if usf.collapsible then
-        headerRow = ftable:addRow("usf_hdr_" .. partialKey, Helper.headerRowProperties)
-        headerRow[1]:createButton():setText(isExpanded and "-" or "+", { halign = "center" })
+        headerRow = container:addRow("usf_hdr_" .. partialKey, Helper.headerRowProperties)
+        headerRow[1]:createButton({ width = rowHeight }):setText(isExpanded and "-" or "+", { halign = "center" })
         headerRow[1].handlers.onClick = function()
           if isExpanded then
             usf.groupExpandState[partialKey] = false
@@ -616,28 +623,27 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
         end
         headerRow[2]:setColSpan(totalCols - 1):createText(label, { halign = "left", titleColor = Color["row_title"] })
       else
-        headerRow = ftable:addRow(false, Helper.headerRowProperties)
+        headerRow = container:addRow(false, Helper.headerRowProperties)
         headerRow[1]:setColSpan(totalCols):createText(label, { halign = "left", titleColor = Color["row_title"] })
       end
     end
 
     -- Render ship rows with the given iteration depth for vanilla-style indentation.
-    -- iteration=0: uses createPropertySection (no indent).
-    -- iteration>0: calls createPropertyRow directly, which prepends (iteration * 4) spaces to each ship name.
-    local function renderShipRows(ships, iteration, sectionId)
-      if iteration == 0 then
+    -- iteration=0, container=nil: uses createPropertySection (flat mode, v8 hierarchical).
+    -- iteration=0, container set: v9 hierarchical — createPropertyRow into the rowGroup at depth 0.
+    -- iteration>0: v8 hierarchical — createPropertyRow with space-indent, no container.
+    local function renderShipRows(container, ships, iteration, sectionId)
+      if iteration == 0 and container == nil then
         return usf.menuMap.createPropertySection(
           instance, sectionId, ftable,
           nil, ships, noneText,
           nil, numDisplayed, nil, usf.menuMap.propertySorterType
         )
       end
-      -- v9 requires a rowGroup; v8 does not have rowGroup parameter.
-      local rowGroup = usf.isV9 and ftable:addRowGroup({}) or nil
       for _, ship in ipairs(ships) do
         if usf.isV9 then
           numDisplayed = usf.menuMap.createPropertyRow(
-            instance, ftable, rowGroup, ship, iteration,
+            instance, ftable, container, ship, iteration,
             nil, nil, nil, numDisplayed, usf.menuMap.propertySorterType)
         else
           numDisplayed = usf.menuMap.createPropertyRow(
@@ -653,7 +659,10 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
         -- ── Hierarchical rendering: nested headers, one level per dimension ──
         -- Each level-N header is indented with (N-1) * 4 spaces, matching vanilla fleet depth.
         -- Collapsing a level-N header hides all deeper headers and ships below it.
+        -- v9: each non-top level header is placed inside the parent level's rowGroup,
+        --     and ships are placed inside the deepest rowGroup.
         local currentPartials = {}
+        local rowGroups = {}  -- v9: [level] = current rowGroup that children of this level belong to
         for _, group in ipairs(groups) do
           for level = 1, numDims do
             local partialKey = table.concat(group.keyParts, "|", 1, level)
@@ -662,16 +671,27 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
               for l = level + 1, numDims do currentPartials[l] = nil end
               -- Only show header if all ancestor levels are visible.
               if isChainVisible(group.keyParts, level - 1) then
-                local indent      = string.rep("    ", level - 1)
-                local headerLabel = indent .. group.labelParts[level]
-                renderGroupHeader(partialKey, headerLabel, isGroupExpanded(partialKey))
+                -- v9: rowGroup nesting provides visual depth; no manual indent needed.
+                -- v8: prepend spaces to simulate indentation.
+                local headerLabel = usf.isV9 and group.labelParts[level]
+                  or (string.rep("    ", level - 1) .. group.labelParts[level])
+                -- v9: level>1 headers go into the parent level's rowGroup.
+                local headerContainer = (usf.isV9 and level > 1) and rowGroups[level - 1] or ftable
+                renderGroupHeader(headerContainer, partialKey, headerLabel, isGroupExpanded(partialKey))
+                -- v9: create a sub-rowGroup inside headerContainer for this level's children.
+                if usf.isV9 then
+                  rowGroups[level] = headerContainer:addRowGroup({})
+                end
               end
             end
           end
           -- Ship rows: visible only when the full ancestor chain is expanded.
-          -- iteration = numDims so each ship name is indented numDims levels.
+          -- v9: rowGroup depth provides indentation; iteration=0 means no extra spaces.
+          -- v8: iteration=numDims prepends spaces to each ship name.
+          local shipIteration = usf.isV9 and 0 or numDims
           if isChainVisible(group.keyParts, numDims) then
-            numDisplayed = renderShipRows(group.ships, numDims, "usf_grp_" .. group.key)
+            numDisplayed = renderShipRows(usf.isV9 and rowGroups[numDims] or nil,
+              group.ships, shipIteration, "usf_grp_" .. group.key)
           end
         end
       else
@@ -679,7 +699,7 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
         for _, group in ipairs(groups) do
           local groupKey = group.key
           local expanded = isGroupExpanded(groupKey)
-          renderGroupHeader(groupKey, group.label, expanded)
+          renderGroupHeader(ftable, groupKey, group.label, expanded)
           if expanded then
             numDisplayed = usf.menuMap.createPropertySection(
               instance, "usf_grp_" .. groupKey, ftable,
