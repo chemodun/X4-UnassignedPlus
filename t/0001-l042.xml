@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Czech -->
+<diff>
+  <add sel="/language">
+    <page id="1972092421" title="Nepřidělené Plus" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Nepřidělené Plus</t>
+      <t id="2">Přidává automatické seskupení do složek pro nepřidělené lodě podle Typu \(Boj, Obchod, Těžba, Záchrana, Stavba, Pomocná\), Velikosti, Rozkazu nebo jejich kombinace.</t>
+
+      <!-- dropdown label (100) -->
+      <t id="100">Seskupit podle:</t>
+      <!-- collapsible checkbox label (101) -->
+      <t id="101">Sbalatelné:</t>
+      <!-- hierarchical checkbox label (102) -->
+      <t id="102">Hierarchické:</t>
+      <!-- grouped section header (103) -->
+      <t id="103">Seskupeno</t>
+
+      <!-- purpose group label for "neutral" (125) -->
+      <t id="125">Ostatní</t>
+
+      <!-- size group labels (130-134) -->
+      <t id="130">Extra malé \(XS\)</t>
+      <t id="131">Malé \(S\)</t>
+      <t id="132">Střední \(M\)</t>
+      <t id="133">Velké \(L\)</t>
+      <t id="134">Extra velké \(XL\)</t>
+
+      <!-- order fallback label (140) -->
+      <t id="140">Pohotovost</t>
+
+      <!-- status messages (1000+) -->
+      <t id="1000">Žádné nepřidělené lodě</t>
+
+      <!-- settings labels (90000+) -->
+      <t id="90001">Skrýt původní záložku Nepřidělené lodě</t>
+      <t id="90002">Uložit konfiguraci záložky při změně</t>
+    </page>
+  </add>
+</diff>

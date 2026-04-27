@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- French -->
+<diff>
+  <add sel="/language">
+    <page id="1972092421" title="Non Assigné Plus" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Non Assigné Plus</t>
+      <t id="2">Ajoute un regroupement automatique en dossiers pour les vaisseaux non assignés par Type \(Combat, Commerce, Mine, Récupération, Construction, Auxiliaire\), Taille, Ordre ou combinaisons des trois.</t>
+
+      <!-- dropdown label (100) -->
+      <t id="100">Grouper par :</t>
+      <!-- collapsible checkbox label (101) -->
+      <t id="101">Réductible :</t>
+      <!-- hierarchical checkbox label (102) -->
+      <t id="102">Hiérarchique :</t>
+      <!-- grouped section header (103) -->
+      <t id="103">Groupé</t>
+
+      <!-- purpose group label for "neutral" (125) -->
+      <t id="125">Autre</t>
+
+      <!-- size group labels (130-134) -->
+      <t id="130">Très petit \(XS\)</t>
+      <t id="131">Petit \(S\)</t>
+      <t id="132">Moyen \(M\)</t>
+      <t id="133">Grand \(L\)</t>
+      <t id="134">Très grand \(XL\)</t>
+
+      <!-- order fallback label (140) -->
+      <t id="140">En attente</t>
+
+      <!-- status messages (1000+) -->
+      <t id="1000">Aucun vaisseau non assigné</t>
+
+      <!-- settings labels (90000+) -->
+      <t id="90001">Masquer l'onglet Vaisseaux non assignés original</t>
+      <t id="90002">Enregistrer la configuration de l'onglet lors des modifications</t>
+    </page>
+  </add>
+</diff>

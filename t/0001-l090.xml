@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Turkish -->
+<diff>
+  <add sel="/language">
+    <page id="1972092421" title="Atanmamış Artı" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Atanmamış Artı</t>
+      <t id="2">Atanmamış gemileri Tür \(Savaş, Ticaret, Madencilik, Kurtarma, İnşaat, Yardımcı\), Boyut, Sipariş veya bunların kombinasyonlarına göre klasörlere otomatik olarak gruplar.</t>
+
+      <!-- dropdown label (100) -->
+      <t id="100">Grupla:</t>
+      <!-- collapsible checkbox label (101) -->
+      <t id="101">Daraltılabilir:</t>
+      <!-- hierarchical checkbox label (102) -->
+      <t id="102">Hiyerarşik:</t>
+      <!-- grouped section header (103) -->
+      <t id="103">Gruplandırılmış</t>
+
+      <!-- purpose group label for "neutral" (125) -->
+      <t id="125">Diğer</t>
+
+      <!-- size group labels (130-134) -->
+      <t id="130">Ekstra Küçük \(XS\)</t>
+      <t id="131">Küçük \(S\)</t>
+      <t id="132">Orta \(M\)</t>
+      <t id="133">Büyük \(L\)</t>
+      <t id="134">Ekstra Büyük \(XL\)</t>
+
+      <!-- order fallback label (140) -->
+      <t id="140">Bekleme</t>
+
+      <!-- status messages (1000+) -->
+      <t id="1000">Atanmamış gemi yok</t>
+
+      <!-- settings labels (90000+) -->
+      <t id="90001">Orijinal Atanmamış Gemiler sekmesini gizle</t>
+      <t id="90002">Değişiklikte sekme yapılandırmasını kaydet</t>
+    </page>
+  </add>
+</diff>

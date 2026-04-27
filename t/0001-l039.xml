@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Italian -->
+<diff>
+  <add sel="/language">
+    <page id="1972092421" title="Non Assegnato Plus" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Non Assegnato Plus</t>
+      <t id="2">Aggiunge raggruppamento automatico in cartelle per le navi non assegnate per Tipo \(Combattimento, Commercio, Miniera, Recupero, Costruzione, Ausiliario\), Dimensione, Ordine o combinazioni dei tre.</t>
+
+      <!-- dropdown label (100) -->
+      <t id="100">Raggruppa per:</t>
+      <!-- collapsible checkbox label (101) -->
+      <t id="101">Comprimibile:</t>
+      <!-- hierarchical checkbox label (102) -->
+      <t id="102">Gerarchico:</t>
+      <!-- grouped section header (103) -->
+      <t id="103">Raggruppato</t>
+
+      <!-- purpose group label for "neutral" (125) -->
+      <t id="125">Altro</t>
+
+      <!-- size group labels (130-134) -->
+      <t id="130">Molto piccolo \(XS\)</t>
+      <t id="131">Piccolo \(S\)</t>
+      <t id="132">Medio \(M\)</t>
+      <t id="133">Grande \(L\)</t>
+      <t id="134">Molto grande \(XL\)</t>
+
+      <!-- order fallback label (140) -->
+      <t id="140">In attesa</t>
+
+      <!-- status messages (1000+) -->
+      <t id="1000">Nessuna nave non assegnata</t>
+
+      <!-- settings labels (90000+) -->
+      <t id="90001">Nascondi la scheda originale Navi non assegnate</t>
+      <t id="90002">Salva la configurazione della scheda alla modifica</t>
+    </page>
+  </add>
+</diff>

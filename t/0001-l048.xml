@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Polish -->
+<diff>
+  <add sel="/language">
+    <page id="1972092421" title="Nieprzypisane Plus" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Nieprzypisane Plus</t>
+      <t id="2">Dodaje automatyczne grupowanie w foldery nieprzypisanych statków według Typu \(Walka, Handel, Górnictwo, Poszukiwanie, Budowa, Pomocniczy\), Rozmiaru, Rozkazu lub kombinacji tych trzech.</t>
+
+      <!-- dropdown label (100) -->
+      <t id="100">Grupuj według:</t>
+      <!-- collapsible checkbox label (101) -->
+      <t id="101">Zwijalne:</t>
+      <!-- hierarchical checkbox label (102) -->
+      <t id="102">Hierarchiczne:</t>
+      <!-- grouped section header (103) -->
+      <t id="103">Pogrupowane</t>
+
+      <!-- purpose group label for "neutral" (125) -->
+      <t id="125">Inne</t>
+
+      <!-- size group labels (130-134) -->
+      <t id="130">Bardzo mały \(XS\)</t>
+      <t id="131">Mały \(S\)</t>
+      <t id="132">Średnio duży \(M\)</t>
+      <t id="133">Duży \(L\)</t>
+      <t id="134">Bardzo duży \(XL\)</t>
+
+      <!-- order fallback label (140) -->
+      <t id="140">Czuwanie</t>
+
+      <!-- status messages (1000+) -->
+      <t id="1000">Brak nieprzypisanych statków</t>
+
+      <!-- settings labels (90000+) -->
+      <t id="90001">Ukryj oryginalną zakładkę Nieprzypisane statki</t>
+      <t id="90002">Zapisuj konfigurację zakładki przy zmianie</t>
+    </page>
+  </add>
+</diff>

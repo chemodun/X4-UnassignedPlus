@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Chinese Simplified -->
+<diff>
+  <add sel="/language">
+    <page id="1972092421" title="未分配增强" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">未分配增强</t>
+      <t id="2">按类型 \(战斗、贸易、采矿、打涞、建造、辅助\)、尺寸、命令或三者的组合，将未分配的舰舰自动分组到文件夹中。</t>
+
+      <!-- dropdown label (100) -->
+      <t id="100">分组依据：</t>
+      <!-- collapsible checkbox label (101) -->
+      <t id="101">可折叠：</t>
+      <!-- hierarchical checkbox label (102) -->
+      <t id="102">层级展示：</t>
+      <!-- grouped section header (103) -->
+      <t id="103">已分组</t>
+
+      <!-- purpose group label for "neutral" (125) -->
+      <t id="125">其他</t>
+
+      <!-- size group labels (130-134) -->
+      <t id="130">超小型 \(XS\)</t>
+      <t id="131">小型 \(S\)</t>
+      <t id="132">中型 \(M\)</t>
+      <t id="133">大型 \(L\)</t>
+      <t id="134">超大型 \(XL\)</t>
+
+      <!-- order fallback label (140) -->
+      <t id="140">待机</t>
+
+      <!-- status messages (1000+) -->
+      <t id="1000">无未分配舰舰</t>
+
+      <!-- settings labels (90000+) -->
+      <t id="90001">隐藏原始未分配舰舰标签页</t>
+      <t id="90002">更改时保存标签页配置</t>
+    </page>
+  </add>
+</diff>

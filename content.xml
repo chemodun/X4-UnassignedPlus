@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <content
-    id=""
-    name="Unassigned Plus"
-    author="Chem O`Dun"
-    version="80001"
-    date="2026-04-27"
-    save="false"
-    sync="false"
-    description="Adds an [b]Unassigned Plus[/b] tab to the [b]Property Owned[/b] menu in the map, placed next to the vanilla [b]Unassigned Ships[/b] tab. A dropdown at the top of the tab lets you auto-group unassigned ships into folders by Purpose, Size, or combinations of both.">
-    <dependency version="800"></dependency>
-    <dependency id="ws_3715253556" optional="false"></dependency>
-    <dependency id="ws_2042901274" optional="false" name="SirNukes Mod Support APIs" version="195"></dependency>
-    <dependency id="kuerteeUIExtensionsAndHUD" optional="false" name="kuertee UI Extensions and HUD" version="804"></dependency>
+  id=""
+  name="Unassigned Plus"
+  author="Chem O`Dun"
+  version="80001"
+  date="2026-04-27"
+  save="false"
+  sync="false"
+  enabled="1"
+  description="Adds an Unassigned Plus tab to the Property Owned menu in the map, placed next to the vanilla Unassigned Ships tab. A dropdown at the top of the tab lets you auto-group unassigned ships into folders by Purpose, Size, or combinations of both.">
+  <text language="7" description="Adds an Unassigned Plus tab to the Property Owned menu in the map, placed next to the vanilla Unassigned Ships tab. A dropdown at the top of the tab lets you auto-group unassigned ships into folders by Purpose, Size, or combinations of both." />
+  <!--  French  -->
+  <text language="33" description="Ajoute un onglet Non assigné Plus au menu Propriété sur la carte, placé à côté de l&apos;onglet Vaisseaux non assignés. Un menu déroulant en haut de l&apos;onglet permet de regrouper automatiquement les vaisseaux non assignés en dossiers par Fonction, Taille ou combinaisons des deux." />
+  <!--  Spanish  -->
+  <text language="34" description="Añade una pestaña No Asignados Plus al menú de Propiedad en el mapa, junto a la pestaña de Naves no asignadas. Un menú desplegable en la parte superior de la pestaña permite agrupar automáticamente las naves no asignadas en carpetas por Función, Tamaño o combinaciones de ambos." />
+  <!--  Italian  -->
+  <text language="39" description="Aggiunge una scheda Non assegnate Plus al menu Proprietà nella mappa, accanto alla scheda Navi non assegnate. Un menu a tendina nella parte superiore della scheda consente di raggruppare automaticamente le navi non assegnate in cartelle per Scopo, Dimensione o combinazioni di entrambi." />
+  <!--  Czech  -->
+  <text language="42" description="Přidá záložku Nepřidělené Plus do nabídky Vlastnictví na mapě, umístěnou vedle záložky Nepřidělené lodě. Rozbalovací nabídka v horní části záložky umožňuje automatické seskupení nepřidělených lodí do složek podle Účelu, Velikosti nebo jejich kombinace." />
+  <!--  English  -->
+  <text language="44" description="Adds an Unassigned Plus tab to the Property Owned menu in the map, placed next to the vanilla Unassigned Ships tab. A dropdown at the top of the tab lets you auto-group unassigned ships into folders by Purpose, Size, or combinations of both." />
+  <!--  Polish  -->
+  <text language="48" description="Dodaje zakładkę Nieprzypisane Plus do menu Własność na mapie, umieszczoną obok zakładki Nieprzypisane statki. Rozwijana lista na górze zakładki umożliwia automatyczne grupowanie nieprzypisanych statków w foldery według Przeznaczenia, Rozmiaru lub kombinacji obu." />
+  <!--  German  -->
+  <text language="49" description="Fügt einen Nicht zugewiesene Plus-Tab zum Menü Eigentum auf der Karte hinzu, neben dem Tab für nicht zugewiesene Schiffe. Ein Dropdown am oberen Rand des Tabs ermöglicht die automatische Gruppierung nicht zugewiesener Schiffe in Ordner nach Zweck, Größe oder Kombinationen aus beidem." />
+  <!--  Portuguese  -->
+  <text language="55" description="Adiciona uma aba Não Atribuídos Plus ao menu de Propriedade no mapa, colocada ao lado da aba de Naves não atribuídas. Um menu suspenso no topo da aba permite agrupar automaticamente as naves não atribuídas em pastas por Propósito, Tamanho ou combinações de ambos." />
+  <!--  Japanese  -->
+  <text language="81" description="マップの所有物メニューに未割り当てプラスタブを追加し、未割り当て艦船タブの隣に配置します。タブ上部のドロップダウンで、未割り当て艦船を目的、サイズ、またはその組み合わせでフォルダに自動グループ化できます。" />
+  <!--  Korean  -->
+  <text language="82" description="맵의 소유 메뉴에 미배정 플러스 탭을 추가하며, 미배정 함선 탭 옆에 배치됩니다. 탭 상단의 드롭다운을 통해 미배정 함선을 목적, 크기 또는 이 둘의 조합으로 폴더에 자동 그룹화할 수 있습니다." />
+  <!--  Chinese Simplified  -->
+  <text language="86" description="在地图的财产菜单中添加「未分配增强」标签页，位于未分配舰船标签页旁边。标签页顶部的下拉菜单可按用途、尺寸或两者的组合将未分配的舰船自动分组到文件夹中。" />
+  <!--  Chinese Traditional  -->
+  <text language="88" description="在地圖的財產選單中新增「未分配增強」標籤頁，位於未分配艦船標籤頁旁邊。標籤頁頂部的下拉選單可按用途、尺寸或兩者的組合將未分配的艦船自動分組到資料夾中。" />
+  <!--  Turkish  -->
+  <text language="90" description="Haritadaki Mülk menüsüne Atanmamış Artı sekmesi ekler; Atanmamış Gemiler sekmesinin yanına yerleştirilir. Sekmenin üst kısmındaki açılır menü, atanmamış gemileri Amaç, Boyut veya ikisinin kombinasyonuna göre klasörlerde otomatik olarak gruplamanızı sağlar." />
+  <!--  Ukrainian  -->
+  <text language="380" description="Додає вкладку Непризначені Плюс до меню Власність на карті, поруч зі вкладкою Непризначені кораблі. Випадаючий список у верхній частині вкладки дозволяє автоматично групувати непризначені кораблі у папки за Призначенням, Розміром або їх комбінацією." />
+  <dependency version="800"></dependency>
+  <dependency id="ws_3715253556" optional="false"></dependency>
+  <dependency id="ws_2042901274" optional="false" name="SirNukes Mod Support APIs" version="195"></dependency>
+  <dependency id="kuerteeUIExtensionsAndHUD" optional="false" name="kuertee UI Extensions and HUD" version="804"></dependency>
 </content>

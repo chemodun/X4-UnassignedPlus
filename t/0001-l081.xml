@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Japanese -->
+<diff>
+  <add sel="/language">
+    <page id="1972092421" title="未割り当てプラス" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">未割り当てプラス</t>
+      <t id="2">未割り当て艦船を種類 \(戦闘、貸易、準れ掘り、サルベージ、建設、支援\)、サイズ、命令、またはその組み合わせでフォルダに自動グループ化します。</t>
+
+      <!-- dropdown label (100) -->
+      <t id="100">グループ化：</t>
+      <!-- collapsible checkbox label (101) -->
+      <t id="101">折りたたみ可能：</t>
+      <!-- hierarchical checkbox label (102) -->
+      <t id="102">階層的：</t>
+      <!-- grouped section header (103) -->
+      <t id="103">グループ済み</t>
+
+      <!-- purpose group label for "neutral" (125) -->
+      <t id="125">その他</t>
+
+      <!-- size group labels (130-134) -->
+      <t id="130">超小型 \(XS\)</t>
+      <t id="131">小型 \(S\)</t>
+      <t id="132">中型 \(M\)</t>
+      <t id="133">大型 \(L\)</t>
+      <t id="134">超大型 \(XL\)</t>
+
+      <!-- order fallback label (140) -->
+      <t id="140">待機</t>
+
+      <!-- status messages (1000+) -->
+      <t id="1000">未割り当て艦船なし</t>
+
+      <!-- settings labels (90000+) -->
+      <t id="90001">元の未割り当て艦船タブを非表示</t>
+      <t id="90002">変更時にタブ設定を保存</t>
+    </page>
+  </add>
+</diff>

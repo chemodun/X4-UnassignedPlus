@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German -->
+<diff>
+  <add sel="/language">
+    <page id="1972092421" title="Nicht Zugewiesen Plus" descr="" voice="no">
+      <!-- mod identity -->
+      <t id="1">Nicht Zugewiesen Plus</t>
+      <t id="2">Fügt automatische Ordnergruppierung für nicht zugewiesene Schiffe nach Typ \(Kampf, Handel, Bergbau, Bergen, Bau, Hilfsschiff\), Größe, Befehl oder Kombinationen aller drei hinzu.</t>
+
+      <!-- dropdown label (100) -->
+      <t id="100">Gruppieren nach:</t>
+      <!-- collapsible checkbox label (101) -->
+      <t id="101">Einklappbar:</t>
+      <!-- hierarchical checkbox label (102) -->
+      <t id="102">Hierarchisch:</t>
+      <!-- grouped section header (103) -->
+      <t id="103">Gruppiert</t>
+
+      <!-- purpose group label for "neutral" (125) -->
+      <t id="125">Sonstige</t>
+
+      <!-- size group labels (130-134) -->
+      <t id="130">Sehr klein \(XS\)</t>
+      <t id="131">Klein \(S\)</t>
+      <t id="132">Mittel \(M\)</t>
+      <t id="133">Groß \(L\)</t>
+      <t id="134">Sehr groß \(XL\)</t>
+
+      <!-- order fallback label (140) -->
+      <t id="140">Bereitschaft</t>
+
+      <!-- status messages (1000+) -->
+      <t id="1000">Keine nicht zugewiesenen Schiffe</t>
+
+      <!-- settings labels (90000+) -->
+      <t id="90001">Originalen Tab für nicht zugewiesene Schiffe ausblenden</t>
+      <t id="90002">Tab-Konfiguration bei Änderung speichern</t>
+    </page>
+  </add>
+</diff>
