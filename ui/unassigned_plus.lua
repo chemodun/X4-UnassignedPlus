@@ -80,6 +80,8 @@ local usf = {
   -- Per-group collapsed state: [key] = true means the group is collapsed.
   -- Only meaningful when collapsible = true; cleared when checkbox changes.
   groupExpandState = {},
+  -- When true, the next render collapses all groups (set when mode changes while all were collapsed).
+  collapseAllOnNextRender = false,
 
   -- Per-ship enrichment data, keyed by tostring(luaId).
   -- Populated by enrichShipData (on_every_playerobject); consumed by buildGroups.
@@ -492,9 +494,26 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
   ):setTextProperties({ fontsize = fontSize })
 
   dropdownRow[3].handlers.onDropDownConfirmed = function(_, id)
-    usf.groupingMode = id
+    usf.menuMap.noupdate = false
+    -- If collapsible and every current group is collapsed, preserve that state after mode change.
+    if usf.collapsible then
+      local currentGroups = buildGroups(infoTableData.unassignedShips)
+      if currentGroups and #currentGroups > 0 then
+        local allCollapsed = true
+        for _, group in ipairs(currentGroups) do
+          if usf.groupExpandState[group.key] ~= false then
+            allCollapsed = false
+            break
+          end
+        end
+        usf.collapseAllOnNextRender = allCollapsed
+      end
+    end
+    usf.groupingMode     = id
+    usf.groupExpandState = {}
     usf.menuMap.refreshInfoFrame()
   end
+  dropdownRow[3].handlers.onDropDownActivated = function() usf.menuMap.noupdate = true end
 
   -- *** Row 2: "Hierarchical" label + checkbox (only when grouping is active) ***
   if usf.groupingMode ~= "none" then
@@ -572,6 +591,14 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
     local groups  = buildGroups(infoTableData.unassignedShips)
     local numDims = 0
     for _ in string.gmatch(usf.groupingMode, "[^_]+") do numDims = numDims + 1 end
+
+    -- If the previous mode had all groups collapsed, collapse the new groups too.
+    if usf.collapseAllOnNextRender and groups then
+      usf.collapseAllOnNextRender = false
+      for _, group in ipairs(groups) do
+        usf.groupExpandState[group.key] = false
+      end
+    end
 
     -- Render one group-header row with optional +/- toggle button and left-aligned label.
     local function renderGroupHeader(partialKey, label, isExpanded)
