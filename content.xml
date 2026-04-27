@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <content
-    id="chem_unassigned_plus"
+    id=""
     name="Unassigned Plus"
     author="Chem O`Dun"
-    version="10000"
-    date="2026-04-26"
+    version="80001"
+    date="2026-04-27"
     save="false"
     sync="false"
     description="Adds an [b]Unassigned Plus[/b] tab to the [b]Property Owned[/b] menu in the map, placed next to the vanilla [b]Unassigned Ships[/b] tab. A dropdown at the top of the tab lets you auto-group unassigned ships into folders by Purpose, Size, or combinations of both.">
-    <!-- English -->
-    <text language="44"
-        name="Unassigned Plus"
-        description="Adds an Unassigned Plus tab to the Property Owned menu. Ships can be auto-grouped into folders by Purpose, Size, or combinations." />
-    <!-- German -->
-    <text language="7"
-        description="Fuegt einen Tab Nicht zugewiesen (Gruppiert) zum Eigentuemer-Menue hinzu. Schiffe koennen automatisch nach Zweck, Groesse oder Kombinationen gruppiert werden." />
-    <!-- French -->
-    <text language="33"
-        description="Ajoute un onglet Non assignes (Groupes) au menu Proprietes. Les vaisseaux peuvent etre regroupes automatiquement par Objectif, Taille ou combinaisons." />
-    <!-- Spanish -->
-    <text language="34"
-        description="Anade una pestana No asignados (Agrupados) al menu de Propiedad. Los barcos se pueden agrupar automaticamente por Proposito, Tamano o combinaciones." />
-    <dependency id="chem_options_helper" />
+    <dependency version="800"></dependency>
+    <dependency id="ws_3715253556" optional="false"></dependency>
+    <dependency id="ws_2042901274" optional="false" name="SirNukes Mod Support APIs" version="195"></dependency>
+    <dependency id="kuerteeUIExtensionsAndHUD" optional="false" name="kuertee UI Extensions and HUD" version="804"></dependency>
 </content>
