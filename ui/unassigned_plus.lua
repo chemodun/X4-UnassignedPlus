@@ -2,7 +2,7 @@
 -- Adds an "Unassigned Plus" tab to the Property Owned map-menu panel,
 -- placed immediately after the vanilla "Unassigned Ships" tab.
 -- A dropdown at the top of the tab lets the player auto-group their unassigned
--- ships into sections (folders) by Purpose, Size, Order, or combinations.
+-- ships into groups by Purpose, Size, Order, or combinations.
 --
 -- The tab uses the same ship rows as the vanilla unassigned-ships view: it calls
 -- menu.createPropertySection for each group, so hull bars, action buttons, and
@@ -63,7 +63,7 @@ local SIZE_ORDER    = { "xs", "s", "m", "l", "xl" }
 
 -- *** module table ***
 
-local usf = {
+local usp = {
   menuMap       = nil,
   menuMapConfig = {},
   isV9          = C.GetGameVersion().major >= 9,
@@ -98,7 +98,7 @@ local debugLevel = "none"   -- "none" | "debug"
 
 local function debug(msg)
   if debugLevel ~= "none" and type(DebugError) == "function" then
-    DebugError("UnassignedShipsFolders: " .. msg)
+    DebugError("UnassignedPlus: " .. msg)
   end
 end
 
@@ -109,8 +109,8 @@ end
 local function getShipSize(classid)
   if not classid then return "s" end
   if Helper.isComponentClass(classid, "ship_xl") then return "xl"
-  elseif Helper.isComponentClass(classid, "ship_l")  then return "l"
-  elseif Helper.isComponentClass(classid, "ship_m")  then return "m"
+  elseif Helper.isComponentClass(classid, "ship_l") then return "l"
+  elseif Helper.isComponentClass(classid, "ship_m") then return "m"
   elseif Helper.isComponentClass(classid, "ship_xs") then return "xs"
   else return "s" end  -- ship_s (and any unknown)
 end
@@ -159,17 +159,17 @@ end
 
 --- Whether a specific node (by its partial key) is expanded (not collapsed by user).
 local function isGroupExpanded(partialKey)
-  if not usf.collapsible then return true end
-  return usf.groupExpandState[partialKey] ~= false
+  if not usp.collapsible then return true end
+  return usp.groupExpandState[partialKey] ~= false
 end
 
 --- Whether a group identified by keyParts[1..depth] is fully visible:
 --- all levels 1 through depth must be expanded.
 local function isChainVisible(keyParts, depth)
-  if not usf.collapsible then return true end
+  if not usp.collapsible then return true end
   for l = 1, depth do
     local pk = table.concat(keyParts, "|", 1, l)
-    if usf.groupExpandState[pk] == false then return false end
+    if usp.groupExpandState[pk] == false then return false end
   end
   return true
 end
@@ -237,10 +237,10 @@ local function getGroupingOptions()
 end
 
 --- Build a sorted list of { key, label, ships = {LuaID,...} } from unassignedShips.
---- Looks up enrichment data from usf.shipData.
+--- Looks up enrichment data from usp.shipData.
 --- Returns nil when groupingMode is "none".
 local function buildGroups(unassignedShips)
-  local mode = usf.groupingMode
+  local mode = usp.groupingMode
   if mode == "none" then return nil end
 
   local purposeMap = purposeLabels()
@@ -251,7 +251,7 @@ local function buildGroups(unassignedShips)
   for d in string.gmatch(mode, "[^_]+") do
     table.insert(dims, d)
   end
-  local sorterType = usf.menuMap.propertySorterType
+  local sorterType = usp.menuMap.propertySorterType
   local sectorInverse = (sorterType == "sectorinverse")
   local sectorDimIdx  = nil  -- which sorts[] position holds the sector value
 
@@ -259,7 +259,7 @@ local function buildGroups(unassignedShips)
   local groupIndex = {}
 
   for _, object in ipairs(unassignedShips) do
-    local data = usf.shipData[tostring(object)]
+    local data = usp.shipData[tostring(object)]
     if not data then goto continue end   -- enrichment missing; skip
 
     local keys   = {}
@@ -337,8 +337,8 @@ end
 
 -- *** tab registration ***
 
-function usf.setupTab()
-  local cfg        = usf.menuMapConfig
+function usp.setupTab()
+  local cfg        = usp.menuMapConfig
   local categories = cfg and cfg.propertyCategories or nil
   if categories == nil then
     debug("propertyCategories not found in menuMapConfig")
@@ -346,7 +346,7 @@ function usf.setupTab()
   end
 
   -- Read saved config to check the hide-original-tab setting.
-  local savedCfg   = GetNPCBlackboard(usf.playerId, "$unassignedPlusConfig") or {}
+  local savedCfg   = GetNPCBlackboard(usp.playerId, "$unassignedPlusConfig") or {}
   local shouldHide = savedCfg["hideOriginalTab"] == 1
 
   -- Scan categories: find our tab (bail if already registered), vanilla tab index,
@@ -385,14 +385,14 @@ function usf.setupTab()
   }
   -- Record whether the vanilla tab was already absent (hidden by another mod).
   -- The options checkbox reads this flag to decide whether to render itself as inactive.
-  savedCfg["vanillaTabAlreadyHidden"] = (vanillaTabIdx == nil and usf.hiddenVanillaTab == nil) and 1 or 0
-  SetNPCBlackboard(usf.playerId, "$unassignedPlusConfig", savedCfg)
+  savedCfg["vanillaTabAlreadyHidden"] = (vanillaTabIdx == nil and usp.hiddenVanillaTab == nil) and 1 or 0
+  SetNPCBlackboard(usp.playerId, "$unassignedPlusConfig", savedCfg)
 
   if shouldHide then
     -- If the vanilla tab is present and the user chose to hide it, remove it now.
     -- Adjust the tracked insertion indices to account for the removed entry.
     if vanillaTabIdx ~= nil then
-      usf.hiddenVanillaTab = categories[vanillaTabIdx]
+      usp.hiddenVanillaTab = categories[vanillaTabIdx]
       if alreadyRegistered then
         table.remove(categories, vanillaTabIdx)
       else
@@ -401,9 +401,9 @@ function usf.setupTab()
       return
     end
   elseif alreadyRegistered and existingIdx then
-    if vanillaTabIdx == nil and usf.hiddenVanillaTab ~= nil then
-      table.insert(categories, existingIdx, usf.hiddenVanillaTab)
-      usf.hiddenVanillaTab = nil
+    if vanillaTabIdx == nil and usp.hiddenVanillaTab ~= nil then
+      table.insert(categories, existingIdx, usp.hiddenVanillaTab)
+      usp.hiddenVanillaTab = nil
     end
   else
     local idx = insertAfter or fallbackIdx
@@ -412,10 +412,10 @@ function usf.setupTab()
     end
     if idx then
       table.insert(categories, idx + 1, newTabConfig)
-      if vanillaTabIdx == nil and usf.hiddenVanillaTab ~= nil then
+      if vanillaTabIdx == nil and usp.hiddenVanillaTab ~= nil then
         -- The vanilla tab was previously hidden by our mod, restore it now.
-        table.insert(categories, idx + 1, usf.hiddenVanillaTab)
-        usf.hiddenVanillaTab = nil
+        table.insert(categories, idx + 1, usp.hiddenVanillaTab)
+        usp.hiddenVanillaTab = nil
       end
     end
   end
@@ -424,10 +424,10 @@ end
 -- *** per-object enrichment callback ***
 
 --- Fired for every player object during the property-owned loop (before display).
---- For ships, stores purpose/size/order/sector in usf.shipData so buildGroups
+--- For ships, stores purpose/size/order/sector in usp.shipData so buildGroups
 --- can run in displayTabData without extra GetComponentData calls.
-function usf.enrichShipData(infoTableData, entry, propertyMode)
-  if usf.groupingMode == "none" then return end
+function usp.enrichShipData(infoTableData, entry, propertyMode)
+  if usp.groupingMode == "none" then return end
   if not Helper.isComponentClass(entry.classid, "ship") then return end
 
   local purpose = entry.purpose
@@ -452,7 +452,7 @@ function usf.enrichShipData(infoTableData, entry, propertyMode)
     end
   end
 
-  usf.shipData[tostring(entry.id)] = {
+  usp.shipData[tostring(entry.id)] = {
     purpose    = purpose,
     size       = getShipSize(entry.classid),
     orderid    = orderid,
@@ -466,23 +466,23 @@ end
 --- Fired at the end of createPropertyOwned, after the vanilla unassigned-ships
 --- section.  When MODE is active: renders the grouping dropdown followed by
 --- ship sections (one section per group, or a flat list when mode = "none").
-function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
-  if usf.menuMap.propertyMode ~= MODE then
+function usp.displayTabData(numDisplayed, instance, ftable, infoTableData)
+  if usp.menuMap.propertyMode ~= MODE then
     return { numdisplayed = numDisplayed }
   end
 
   local maxIcons  = infoTableData.maxIcons
   local totalCols = 5 + maxIcons
-  local cfg       = usf.menuMapConfig
+  local cfg       = usp.menuMapConfig
   local rowHeight = cfg.mapRowHeight  or 30
   local fontSize  = cfg.mapFontSize   or Helper.standardFontSize
   local noneText  = "-- " .. ReadText(1001, 34) .. " --"
-  local _, groupItemsCount = string.gsub(usf.groupingMode, "_", "")
-  local hierarchyLevels = usf.hierarchical and (groupItemsCount + 1) or 0
+  local _, groupItemsCount = string.gsub(usp.groupingMode, "_", "")
+  local hierarchyLevels = usp.hierarchical and (groupItemsCount + 1) or 0
 
   -- *** Row 1: "Group by:" label + grouping dropdown ***
-  local dropdownRow = ftable:addRow("usf_grouping_dropdown", { fixed = true })
-  if usf.isV9 and hierarchyLevels > 0 then
+  local dropdownRow = ftable:addRow("usp_grouping_dropdown", { fixed = true })
+  if usp.isV9 and hierarchyLevels > 0 then
     ftable.columndata[1].width = ftable.columndata[1].width + hierarchyLevels * Helper.standardContainerOffset
     ftable.columndata[#ftable.columndata].width = ftable.columndata[#ftable.columndata].width + hierarchyLevels * Helper.standardContainerOffset
     ftable.columndata[2].width = ftable.columndata[2].width - hierarchyLevels * Helper.standardContainerOffset
@@ -495,73 +495,73 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
   dropdownRow[3]:setColSpan(totalCols - 2):createDropDown(
     getGroupingOptions(),
     {
-      startOption = usf.groupingMode,
+      startOption = usp.groupingMode,
       active      = true,
       height      = rowHeight,
     }
   ):setTextProperties({ fontsize = fontSize })
 
   dropdownRow[3].handlers.onDropDownConfirmed = function(_, id)
-    usf.menuMap.noupdate = false
+    usp.menuMap.noupdate = false
     -- If collapsible and every current group is collapsed, preserve that state after mode change.
-    if usf.collapsible then
+    if usp.collapsible then
       local currentGroups = buildGroups(infoTableData.unassignedShips)
       if currentGroups and #currentGroups > 0 then
         local allCollapsed = true
         for _, group in ipairs(currentGroups) do
-          if usf.groupExpandState[group.key] ~= false then
+          if usp.groupExpandState[group.key] ~= false then
             allCollapsed = false
             break
           end
         end
-        usf.collapseAllOnNextRender = allCollapsed
+        usp.collapseAllOnNextRender = allCollapsed
       end
     end
-    usf.groupingMode     = id
-    usf.groupExpandState = {}
-    usf.menuMap.refreshInfoFrame()
+    usp.groupingMode     = id
+    usp.groupExpandState = {}
+    usp.menuMap.refreshInfoFrame()
   end
-  dropdownRow[3].handlers.onDropDownActivated = function() usf.menuMap.noupdate = true end
+  dropdownRow[3].handlers.onDropDownActivated = function() usp.menuMap.noupdate = true end
 
   -- *** Row 2: "Hierarchical" label + checkbox (only when grouping is active) ***
-  if usf.groupingMode ~= "none" then
-    local hierarchicalRow = ftable:addRow("usf_hierarchical_row", { fixed = true })
+  if usp.groupingMode ~= "none" then
+    local hierarchicalRow = ftable:addRow("usp_hierarchical_row", { fixed = true })
     hierarchicalRow[1]:setColSpan(2):createText(
       ReadText(PAGE_ID, 102),
       { fontsize = fontSize }
     )
-    hierarchicalRow[3]:createCheckBox(usf.hierarchical, { height = rowHeight, width = rowHeight })
+    hierarchicalRow[3]:createCheckBox(usp.hierarchical, { height = rowHeight, width = rowHeight })
     hierarchicalRow[3].handlers.onClick = function(_, checked)
-      usf.hierarchical     = checked
-      usf.groupExpandState = {}
-      usf.menuMap.refreshInfoFrame()
+      usp.hierarchical     = checked
+      usp.groupExpandState = {}
+      usp.menuMap.refreshInfoFrame()
     end
   end
 
   -- *** Row 3: "Collapsible" label + checkbox (only when grouping is active) ***
-  if usf.groupingMode ~= "none" then
-    local collapsibleRow = ftable:addRow("usf_collapse_row", { fixed = true })
+  if usp.groupingMode ~= "none" then
+    local collapsibleRow = ftable:addRow("usp_collapse_row", { fixed = true })
     collapsibleRow[1]:setColSpan(2):createText(
       ReadText(PAGE_ID, 101),
       { fontsize = fontSize }
     )
-    collapsibleRow[3]:createCheckBox(usf.collapsible, { height = rowHeight, width = rowHeight })
+    collapsibleRow[3]:createCheckBox(usp.collapsible, { height = rowHeight, width = rowHeight })
     collapsibleRow[3].handlers.onClick = function(_, checked)
-      usf.collapsible      = checked
-      usf.groupExpandState = {}
-      usf.menuMap.refreshInfoFrame()
+      usp.collapsible      = checked
+      usp.groupExpandState = {}
+      usp.menuMap.refreshInfoFrame()
     end
   end
 
   -- ── "Grouped" section header (only when grouping is active) ────────────────
-  if usf.groupingMode ~= "none" then
-    if usf.collapsible then
+  if usp.groupingMode ~= "none" then
+    if usp.collapsible then
       -- Determine whether all groups are currently expanded (none collapsed).
       local allExpanded = true
-      for _, v in pairs(usf.groupExpandState) do
+      for _, v in pairs(usp.groupExpandState) do
         if v == false then allExpanded = false; break end
       end
-      local grow = ftable:addRow("usf_grouped_header", Helper.headerRowProperties)
+      local grow = ftable:addRow("usp_grouped_header", Helper.headerRowProperties)
       grow[1]:createButton({ width = rowHeight }):setText(allExpanded and "-" or "+", { halign = "center" })
       grow[1].handlers.onClick = function()
         if allExpanded then
@@ -569,14 +569,14 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
           local groups = buildGroups(infoTableData.unassignedShips)
           if groups then
             for _, group in ipairs(groups) do
-              usf.groupExpandState[group.key] = false
+              usp.groupExpandState[group.key] = false
             end
           end
         else
           -- Expand all: clear every collapsed entry.
-          usf.groupExpandState = {}
+          usp.groupExpandState = {}
         end
-        usf.menuMap.refreshInfoFrame()
+        usp.menuMap.refreshInfoFrame()
       end
       grow[2]:setColSpan(totalCols - 1):createText(ReadText(PAGE_ID, 103), Helper.headerRowCenteredProperties)
     else
@@ -586,25 +586,25 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
   end
 
   -- ── Ship sections ──────────────────────────────────────────────────────────
-  if usf.groupingMode == "none" then
+  if usp.groupingMode == "none" then
     -- Flat list — identical to the vanilla unassigned ships tab.
-    numDisplayed = usf.menuMap.createPropertySection(
-      instance, "usf_ships_flat", ftable,
+    numDisplayed = usp.menuMap.createPropertySection(
+      instance, "usp_ships_flat", ftable,
       nil,
       infoTableData.unassignedShips,
       noneText,
-      nil, numDisplayed, nil, usf.menuMap.propertySorterType
+      nil, numDisplayed, nil, usp.menuMap.propertySorterType
     )
   else
     local groups  = buildGroups(infoTableData.unassignedShips)
     local numDims = 0
-    for _ in string.gmatch(usf.groupingMode, "[^_]+") do numDims = numDims + 1 end
+    for _ in string.gmatch(usp.groupingMode, "[^_]+") do numDims = numDims + 1 end
 
     -- If the previous mode had all groups collapsed, collapse the new groups too.
-    if usf.collapseAllOnNextRender and groups then
-      usf.collapseAllOnNextRender = false
+    if usp.collapseAllOnNextRender and groups then
+      usp.collapseAllOnNextRender = false
       for _, group in ipairs(groups) do
-        usf.groupExpandState[group.key] = false
+        usp.groupExpandState[group.key] = false
       end
     end
 
@@ -612,16 +612,16 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
     -- container: the table or rowGroup to add the row into.
     local function renderGroupHeader(container, partialKey, label, isExpanded)
       local headerRow
-      if usf.collapsible then
-        headerRow = container:addRow("usf_hdr_" .. partialKey, Helper.headerRowProperties)
+      if usp.collapsible then
+        headerRow = container:addRow("usp_hdr_" .. partialKey, Helper.headerRowProperties)
         headerRow[1]:createButton({ width = rowHeight }):setText(isExpanded and "-" or "+", { halign = "center" })
         headerRow[1].handlers.onClick = function()
           if isExpanded then
-            usf.groupExpandState[partialKey] = false
+            usp.groupExpandState[partialKey] = false
           else
-            usf.groupExpandState[partialKey] = nil
+            usp.groupExpandState[partialKey] = nil
           end
-          usf.menuMap.refreshInfoFrame()
+          usp.menuMap.refreshInfoFrame()
         end
         headerRow[2]:setColSpan(totalCols - 1):createText(label, { halign = "left", titleColor = Color["row_title"] })
       else
@@ -636,28 +636,28 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
     -- iteration>0: v8 hierarchical — createPropertyRow with space-indent, no container.
     local function renderShipRows(container, ships, iteration, sectionId)
       if iteration == 0 and container == nil then
-        return usf.menuMap.createPropertySection(
+        return usp.menuMap.createPropertySection(
           instance, sectionId, ftable,
           nil, ships, noneText,
-          nil, numDisplayed, nil, usf.menuMap.propertySorterType
+          nil, numDisplayed, nil, usp.menuMap.propertySorterType
         )
       end
       for _, ship in ipairs(ships) do
-        if usf.isV9 then
-          numDisplayed = usf.menuMap.createPropertyRow(
+        if usp.isV9 then
+          numDisplayed = usp.menuMap.createPropertyRow(
             instance, ftable, container, ship, iteration,
-            nil, nil, nil, numDisplayed, usf.menuMap.propertySorterType)
+            nil, nil, nil, numDisplayed, usp.menuMap.propertySorterType)
         else
-          numDisplayed = usf.menuMap.createPropertyRow(
+          numDisplayed = usp.menuMap.createPropertyRow(
             instance, ftable, ship, iteration,
-            nil, nil, nil, numDisplayed, usf.menuMap.propertySorterType)
+            nil, nil, nil, numDisplayed, usp.menuMap.propertySorterType)
         end
       end
       return numDisplayed
     end
 
     if groups and #groups > 0 then
-      if usf.hierarchical and numDims > 1 then
+      if usp.hierarchical and numDims > 1 then
         -- ── Hierarchical rendering: nested headers, one level per dimension ──
         -- Each level-N header is indented with (N-1) * 4 spaces, matching vanilla fleet depth.
         -- Collapsing a level-N header hides all deeper headers and ships below it.
@@ -675,9 +675,9 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
               if isChainVisible(group.keyParts, level - 1) then
                 -- v9: rowGroup nesting provides visual depth; no manual indent needed.
                 -- v8: prepend spaces to simulate indentation.
-                local headerLabel = usf.isV9 and group.labelParts[level]
+                local headerLabel = usp.isV9 and group.labelParts[level]
                   or (string.rep("    ", level - 1) .. group.labelParts[level])
-                if usf.isV9 then
+                if usp.isV9 then
                   -- Each group gets its OWN new rowGroup; the header is its very first row.
                   -- Rule: once a sub-rowGroup has received rows, the parent can't receive
                   -- more direct rows — the disconnect check fires. But addRowGroup itself
@@ -702,10 +702,10 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
           -- v9: ships go into rowGroups[numDims] right after its header — no sub-groups
           --     have been added to it yet, so previousRow == self.index → safe.
           -- v8: iteration=numDims prepends spaces to each ship name.
-          local shipIteration = usf.isV9 and 0 or numDims
+          local shipIteration = usp.isV9 and 0 or numDims
           if isChainVisible(group.keyParts, numDims) then
-            numDisplayed = renderShipRows(usf.isV9 and rowGroups[numDims] or nil,
-              group.ships, shipIteration, "usf_grp_" .. group.key)
+            numDisplayed = renderShipRows(usp.isV9 and rowGroups[numDims] or nil,
+              group.ships, shipIteration, "usp_grp_" .. group.key)
           end
         end
       else
@@ -715,10 +715,10 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
           local expanded = isGroupExpanded(groupKey)
           renderGroupHeader(ftable, groupKey, group.label, expanded)
           if expanded then
-            numDisplayed = usf.menuMap.createPropertySection(
-              instance, "usf_grp_" .. groupKey, ftable,
+            numDisplayed = usp.menuMap.createPropertySection(
+              instance, "usp_grp_" .. groupKey, ftable,
               nil, group.ships, noneText,
-              nil, numDisplayed, nil, usf.menuMap.propertySorterType
+              nil, numDisplayed, nil, usp.menuMap.propertySorterType
             )
           end
         end
@@ -744,20 +744,20 @@ local function Init()
     return
   end
 
-  usf.menuMap       = menuMap
-  usf.menuMapConfig = menuMap.uix_getConfig() or {}
-  usf.playerId      = ConvertStringTo64Bit(tostring(C.GetPlayerID()))
+  usp.menuMap       = menuMap
+  usp.menuMapConfig = menuMap.uix_getConfig() or {}
+  usp.playerId      = ConvertStringTo64Bit(tostring(C.GetPlayerID()))
 
   menuMap.registerCallback(
     "createPropertyOwned_on_every_playerobject",
-    usf.enrichShipData)
+    usp.enrichShipData)
   menuMap.registerCallback(
     "createPropertyOwned_on_createPropertySection_unassignedships",
-    usf.displayTabData)
+    usp.displayTabData)
 
-  usf.setupTab()
+  usp.setupTab()
 
-  RegisterEvent("UnassignedPlus.ConfigChanged", usf.setupTab)
+  RegisterEvent("UnassignedPlus.ConfigChanged", usp.setupTab)
 end
 
 Register_OnLoad_Init(Init)
