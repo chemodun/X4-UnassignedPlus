@@ -16,6 +16,7 @@
         <do_if value="@player.entity.$unassignedPlusConfig == null">
           <set_value name="player.entity.$unassignedPlusConfig" exact="table[
             $hideOriginalTab = false,
+            $saveConfig      = true,
           ]" />
         </do_if>
         <set_value name="$config" exact="player.entity.$unassignedPlusConfig" />
@@ -25,6 +26,9 @@
         </do_if>
         <do_if value="$config.$vanillaTabAlreadyHidden? == false">
           <set_value name="$config.$vanillaTabAlreadyHidden" exact="false" />
+        </do_if>
+        <do_if value="$config.$saveConfig? == false">
+          <set_value name="$config.$saveConfig" exact="true" />
         </do_if>
       </actions>
     </library>
@@ -59,6 +63,15 @@
           <param name="text" value="{1972092421, 90001}" />
           <param name="data" value="$config" />
           <param name="active" value="$config.$vanillaTabAlreadyHidden != 1" />
+          <param name="handle" value="Handle_Checkbox_Changed" />
+        </run_actions>
+        <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+        <run_actions ref="md.Options_Helper.Add_Checkbox">
+          <param name="id" value="'saveConfig'" />
+          <param name="col" value="1" />
+          <param name="textColSpan" value="11" />
+          <param name="text" value="{1972092421, 90002}" />
+          <param name="data" value="$config" />
           <param name="handle" value="Handle_Checkbox_Changed" />
         </run_actions>
         <remove_value name="$config" />

@@ -83,6 +83,10 @@ local usp = {
   -- When true, the next render collapses all groups (set when mode changes while all were collapsed).
   collapseAllOnNextRender = false,
 
+  -- When true, the current display config (groupingMode, hierarchical, collapsible)
+  -- is persisted to the player blackboard so it survives map close / reload.
+  saveConfig    = true,
+
   -- Per-ship enrichment data, keyed by tostring(luaId).
   -- Populated by enrichShipData (on_every_playerobject); consumed by buildGroups.
   shipData      = {},
@@ -91,6 +95,38 @@ local usp = {
   -- nil means the tab is currently visible in propertyCategories.
   hiddenVanillaTab = nil,
 }
+
+-- *** config persistence ***
+
+--- Save the current display config into the shared blackboard variable.
+--- Only called when usp.saveConfig is true.
+--- Boolean fields are stored as integers (1/0) because MD → Lua blackboard
+--- converts booleans to integers on the Lua side.
+local function saveDisplayConfig()
+  if not usp.saveConfig then return end
+  local savedCfg = GetNPCBlackboard(usp.playerId, "$unassignedPlusConfig") or {}
+  -- Field names must be plain strings (no $); the engine strips/adds $ at the boundary.
+  savedCfg["groupingMode"]  = usp.groupingMode
+  savedCfg["hierarchical"]  = usp.hierarchical  and 1 or 0
+  savedCfg["collapsible"]   = usp.collapsible   and 1 or 0
+  savedCfg["saveConfig"]    = 1
+  SetNPCBlackboard(usp.playerId, "$unassignedPlusConfig", savedCfg)
+end
+
+--- Load display config from the blackboard, if a previous session saved one.
+--- Called from Init() after playerId is set.
+local function loadDisplayConfig()
+  local savedCfg = GetNPCBlackboard(usp.playerId, "$unassignedPlusConfig")
+  if savedCfg == nil then return end
+  -- Only restore if the user had saveConfig enabled last session.
+  -- nil = key never written = default true (restore); 0 = explicitly disabled.
+  if savedCfg["saveConfig"] == 0 then return end
+  if savedCfg["groupingMode"] then
+    usp.groupingMode = savedCfg["groupingMode"]
+  end
+  usp.hierarchical = savedCfg["hierarchical"] == 1
+  usp.collapsible  = savedCfg["collapsible"]  == 1
+end
 
 -- *** debug helpers ***
 
@@ -348,6 +384,8 @@ function usp.setupTab()
   -- Read saved config to check the hide-original-tab setting.
   local savedCfg   = GetNPCBlackboard(usp.playerId, "$unassignedPlusConfig") or {}
   local shouldHide = savedCfg["hideOriginalTab"] == 1
+  -- Sync saveConfig: nil = never set = default true; 0 = explicitly disabled.
+  usp.saveConfig = savedCfg["saveConfig"] ~= 0
 
   -- Scan categories: find our tab (bail if already registered), vanilla tab index,
   -- and the best insertion anchors for our own tab.
@@ -519,6 +557,7 @@ function usp.displayTabData(numDisplayed, instance, ftable, infoTableData)
     end
     usp.groupingMode     = id
     usp.groupExpandState = {}
+    saveDisplayConfig()
     usp.menuMap.refreshInfoFrame()
   end
   dropdownRow[3].handlers.onDropDownActivated = function() usp.menuMap.noupdate = true end
@@ -534,6 +573,7 @@ function usp.displayTabData(numDisplayed, instance, ftable, infoTableData)
     hierarchicalRow[3].handlers.onClick = function(_, checked)
       usp.hierarchical     = checked
       usp.groupExpandState = {}
+      saveDisplayConfig()
       usp.menuMap.refreshInfoFrame()
     end
   end
@@ -549,6 +589,7 @@ function usp.displayTabData(numDisplayed, instance, ftable, infoTableData)
     collapsibleRow[3].handlers.onClick = function(_, checked)
       usp.collapsible      = checked
       usp.groupExpandState = {}
+      saveDisplayConfig()
       usp.menuMap.refreshInfoFrame()
     end
   end
@@ -747,6 +788,7 @@ local function Init()
   usp.menuMap       = menuMap
   usp.menuMapConfig = menuMap.uix_getConfig() or {}
   usp.playerId      = ConvertStringTo64Bit(tostring(C.GetPlayerID()))
+  loadDisplayConfig()
 
   menuMap.registerCallback(
     "createPropertyOwned_on_every_playerobject",

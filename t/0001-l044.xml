@@ -36,6 +36,7 @@
 
             <!-- settings labels (90000+) -->
             <t id="90001">Hide Original Unassigned Ships Tab</t>
+            <t id="90002">Save Tab configuration on change</t>
         </page>
     </add>
 </diff>
