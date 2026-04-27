@@ -664,7 +664,7 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
         -- v9: each non-top level header is placed inside the parent level's rowGroup,
         --     and ships are placed inside the deepest rowGroup.
         local currentPartials = {}
-        local rowGroups = {}  -- v9: [level] = current rowGroup that children of this level belong to
+        local rowGroups = {}  -- v9: [level] = the rowGroup that owns the most-recently-seen group at that level
         for _, group in ipairs(groups) do
           for level = 1, numDims do
             local partialKey = table.concat(group.keyParts, "|", 1, level)
@@ -677,18 +677,30 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
                 -- v8: prepend spaces to simulate indentation.
                 local headerLabel = usf.isV9 and group.labelParts[level]
                   or (string.rep("    ", level - 1) .. group.labelParts[level])
-                -- v9: level>1 headers go into the parent level's rowGroup.
-                local headerContainer = (usf.isV9 and level > 1) and rowGroups[level - 1] or ftable
-                renderGroupHeader(headerContainer, partialKey, headerLabel, isGroupExpanded(partialKey))
-                -- v9: create a sub-rowGroup inside headerContainer for this level's children.
                 if usf.isV9 then
-                  rowGroups[level] = headerContainer:addRowGroup({})
+                  -- Each group gets its OWN new rowGroup; the header is its very first row.
+                  -- Rule: once a sub-rowGroup has received rows, the parent can't receive
+                  -- more direct rows — the disconnect check fires. But addRowGroup itself
+                  -- never triggers the check (only addRow does), and when firstrow==0
+                  -- (first-ever addRow on a brand-new group) the check is also skipped.
+                  -- So: create group, add header (firstrow=0 → safe), then add sub-groups
+                  -- and ship rows while still in this group (previousRow == self.index → safe).
+                  -- Level auto-increments through addRowGroup's default logic, giving each
+                  -- nesting depth the correct visual indent. Column widths are pre-expanded
+                  -- by hierarchyLevels * standardContainerOffset at the top of displayTabData.
+                  local parentContainer = (level == 1) and ftable or rowGroups[level - 1]
+                  local groupContainer  = parentContainer:addRowGroup({})
+                  renderGroupHeader(groupContainer, partialKey, headerLabel, isGroupExpanded(partialKey))
+                  rowGroups[level] = groupContainer
+                else
+                  renderGroupHeader(ftable, partialKey, headerLabel, isGroupExpanded(partialKey))
                 end
               end
             end
           end
           -- Ship rows: visible only when the full ancestor chain is expanded.
-          -- v9: rowGroup depth provides indentation; iteration=0 means no extra spaces.
+          -- v9: ships go into rowGroups[numDims] right after its header — no sub-groups
+          --     have been added to it yet, so previousRow == self.index → safe.
           -- v8: iteration=numDims prepends spaces to each ship name.
           local shipIteration = usf.isV9 and 0 or numDims
           if isChainVisible(group.keyParts, numDims) then
