@@ -1,0 +1,111 @@
+[size=4][u]Unassigned Plus[/u][/size]
+
+Adds an [b]Unassigned Plus[/b] tab to the [b]Property Owned[/b] menu in the map, placed next to the vanilla Unassigned Ships tab. A dropdown at the top of the tab lets you auto-group unassigned ships into folders by Type, Size, Order, Sector, or any combination of all four - with optional collapsible groups and hierarchical nesting.
+
+[size=3][u][b]Features[/b][/u][/size]
+[list]
+[*] [b]Unassigned Plus tab[/b]: A dedicated tab in the Property Owned menu lists all unassigned ships with the same ship rows as the vanilla view - hull bars, action buttons, and sub-expansion all work exactly as in the vanilla tab.
+[*] [b]Flexible grouping[/b]: Ships can be grouped by any single dimension or any combination of up to four dimensions: [b]Type[/b] (Purpose), [b]Size[/b], [b]Order[/b], [b]Sector[/b]. All permutations are available in the dropdown.
+[*] [b]Hierarchical groups[/b]: When multiple grouping dimensions are selected, enable the [b]Hierarchical[/b] checkbox to render groups as a nested tree of headers rather than flat concatenated labels.
+[*] [b]Collapsible groups[/b]: Enable the [b]Collapsible[/b] checkbox to add +/- toggle buttons to group headers. A master expand/collapse button appears in the section header row. Collapsed state is preserved when re-opening the tab.
+[*] [b]Group ordering[/b]: Purpose groups follow a logical role order (Fight, Auxiliary, Trade, Mine, Salvage, Build, Other); Size groups are sorted largest-first; Order and Sector groups are sorted alphabetically.
+[*] [b]Save configuration[/b]: When the [b]Save Tab configuration on change[/b] option is enabled (default: on), the current grouping mode, hierarchical, and collapsible settings are persisted to the save file and restored on the next session.
+[*] [b]Hide vanilla tab[/b]: Optionally hide the original Unassigned Ships tab to reduce clutter.
+[*] [b]Tab positioning[/b]: The tab is placed immediately after the vanilla Unassigned Ships tab.
+[*] [b]Compatible with X4 8.00 and 9.00[/b].
+[/list]
+[size=3][u][b]Requirements[/b][/u][/size]
+[list]
+[*] [b]X4: Foundations[/b]: Version [b]8.00HF4[/b] or higher and [b]UI Extensions and HUD[/b]: Version [b]v8.0.4.x[/b] or higher by [url=https://next.nexusmods.com/profile/kuertee?gameId=2659]kuertee[/url]:
+[list]
+[*] Available on Nexus Mods: [url=https://www.nexusmods.com/x4foundations/mods/552]UI Extensions and HUD[/url]
+[/list]
+[*] [b]X4: Foundations[/b]: Version [b]9.00 beta 3[/b] or higher and [b]UI Extensions and HUD[/b]: Version [b]v9.0.0.0.3[/b] or higher by [url=https://next.nexusmods.com/profile/kuertee?gameId=2659]kuertee[/url].
+[*] [b]Mod Support APIs[/b]: Version 1.95 or higher by [url=https://next.nexusmods.com/profile/sirnukes?gameId=2659]SirNukes[/url]:
+[list]
+[*] Available on Steam: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2042901274]SirNukes Mod Support APIs[/url]
+[*] Available on Nexus Mods: [url=https://www.nexusmods.com/x4foundations/mods/503]Mod Support APIs[/url].
+[/list]
+[/list]
+[size=3][u][b]Installation[/b][/u][/size]
+[list]
+[*] [b]Steam Workshop[/b]: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=0]Unassigned Plus[/url]
+[*] [b]Nexus Mods[/b]: [url=https://www.nexusmods.com/x4foundations/mods/2090]Unassigned Plus[/url]
+[/list]
+[size=3][u][b]Usage[/b][/u][/size]
+
+Open the map, switch to the [b]Property Owned[/b] panel, and click the [b]Unassigned Plus[/b] tab in the tab strip.
+
+[img]https://raw.githubusercontent.com/chemodun/X4-UnassignedPlus/refs/heads/main/docs/images/property_owned_unassigned_plus.png[/img]
+
+[size=3][u][i]Grouping dropdown[/i][/u][/size]
+
+The first row of the tab contains a [b]Group by:[/b] dropdown.
+
+[img]https://raw.githubusercontent.com/chemodun/X4-UnassignedPlus/refs/heads/main/docs/images/dropdown.png[/img]
+
+Available options:
+[list]
+[*] [b]None[/b] - no grouping; ships listed flat, same as vanilla.
+[*] [b]Type[/b] - group by ship role: Fight, Trade, Mine, Salvage, Build, Auxiliary, Other.
+[*] [b]Size[/b] - group by hull class: XL, L, M, S, XS.
+[*] [b]Order[/b] - group by the ship's current order name.
+[*] [b]Sector[/b] - group by the ship's current sector.
+[*] [b]Type, Size[/b] / [b]Size, Type[/b] / ... - multi-dimension grouping; all permutations of up to all four dimensions are available.
+[/list]
+[img]https://raw.githubusercontent.com/chemodun/X4-UnassignedPlus/refs/heads/main/docs/images/grouping.png[/img]
+
+[size=3][u][i]Hierarchical checkbox[/i][/u][/size]
+
+Visible when any grouping is active. When checked, multi-dimension groups are rendered as a nested tree: the first dimension forms top-level group headers, each of which contains sub-headers for the second dimension, and so on. When unchecked, the combined label (e.g. "Fight / Small") is used as a single flat header.
+
+[img]https://raw.githubusercontent.com/chemodun/X4-UnassignedPlus/refs/heads/main/docs/images/hierarchical.png[/img]
+
+[size=3][u][i]Collapsible checkbox[/i][/u][/size]
+
+Visible when any grouping is active. When checked, each group header gains a [b]+/-[/b] toggle button. The section header row also gains a master button to expand or collapse all groups at once. Groups start expanded; collapsed state is remembered until the grouping mode changes.
+
+[img]https://raw.githubusercontent.com/chemodun/X4-UnassignedPlus/refs/heads/main/docs/images/collapsible.png[/img]
+
+[size=3][u]Collapse all button[/u][/size]
+
+When collapsible groups are enabled, a master toggle button appears in the section header row. Clicking it collapses or expands all groups at once.
+
+[img]https://raw.githubusercontent.com/chemodun/X4-UnassignedPlus/refs/heads/main/docs/images/collapse_all.png[/img]
+
+[size=3][u][i]Sorting[/i][/u][/size]
+
+The sorting buttons take effect immediately when on grouped objects, mostly inside a groups.
+But in addition the sorting by size and sector has also effect on groups itself.
+
+[img]https://raw.githubusercontent.com/chemodun/X4-UnassignedPlus/refs/heads/main/docs/images/sorting_size.png[/img]
+
+[size=3][u][i]Extension options[/i][/u][/size]
+
+[b]Options Menu > Extension options > Unassigned Plus[/b]:
+
+[img]https://raw.githubusercontent.com/chemodun/X4-UnassignedPlus/refs/heads/main/docs/images/options.png[/img]
+[list]
+[*] [b]Hide Original Unassigned Ships Tab[/b]: When enabled, the vanilla Unassigned Ships tab is removed from the tab strip. Disabled automatically if the vanilla tab was already hidden by another mod.
+[*] [b]Save Tab configuration on change[/b]: When enabled (default), the current grouping mode, Hierarchical, and Collapsible settings are saved to the game save whenever they change and restored automatically on the next session.
+[/list]
+[size=3][u][b]Credits[/b][/u][/size]
+[list]
+[*] [b]Author[/b]: Chem O`Dun, on [url=https://next.nexusmods.com/profile/ChemODun/mods?gameId=2659]Nexus Mods[/url] and [url=https://steamcommunity.com/id/chemodun/myworkshopfiles/?appid=392160]Steam Workshop[/url]
+[*] [i]"X4: Foundations"[/i] is a trademark of [url=https://www.egosoft.com]Egosoft[/url].
+[/list]
+[size=3][u][b]Acknowledgements[/b][/u][/size]
+[list]
+[*] [url=https://www.egosoft.com]EGOSOFT[/url] - for the X series.
+[*] [url=https://next.nexusmods.com/profile/kuertee?gameId=2659]kuertee[/url] - for the [b]UI Extensions and HUD[/b] that makes this extension possible.
+[*] [url=https://next.nexusmods.com/profile/sirnukes?gameId=2659]SirNukes[/url] - for the [b]Mod Support APIs[/b] that power the UI hooks and options menu.
+[/list]
+[size=3][u][b]Changelog[/b][/u][/size]
+
+[size=3][u][i][8.00.01] - 2026-04-27[/i][/u][/size]
+[list]
+[*] [b]Added[/b]
+[list]
+[*] Initial public version.
+[/list]
+[/list]
