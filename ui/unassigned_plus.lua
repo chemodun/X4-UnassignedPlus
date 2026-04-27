@@ -477,15 +477,17 @@ function usf.displayTabData(numDisplayed, instance, ftable, infoTableData)
   local rowHeight = cfg.mapRowHeight  or 30
   local fontSize  = cfg.mapFontSize   or Helper.standardFontSize
   local noneText  = "-- " .. ReadText(1001, 34) .. " --"
-
-  if usf.isV9 then
-    ftable.columndata[1].width = ftable.columndata[1].width + 4 * Helper.standardContainerOffset
-    ftable.columndata[#ftable.columndata].width = ftable.columndata[#ftable.columndata].width + 4 * Helper.standardContainerOffset
-    ftable.columndata[2].width = ftable.columndata[2].width - 8 * Helper.standardContainerOffset
-  end
+  local _, groupItemsCount = string.gsub(usf.groupingMode, "_", "")
+  local hierarchyLevels = usf.hierarchical and (groupItemsCount + 1) or 0
 
   -- *** Row 1: "Group by:" label + grouping dropdown ***
   local dropdownRow = ftable:addRow("usf_grouping_dropdown", { fixed = true })
+  if usf.isV9 and hierarchyLevels > 0 then
+    ftable.columndata[1].width = ftable.columndata[1].width + hierarchyLevels * Helper.standardContainerOffset
+    ftable.columndata[#ftable.columndata].width = ftable.columndata[#ftable.columndata].width + hierarchyLevels * Helper.standardContainerOffset
+    ftable.columndata[2].width = ftable.columndata[2].width - hierarchyLevels * Helper.standardContainerOffset
+    ftable.columndata[3].width = ftable.columndata[3].width - hierarchyLevels * Helper.standardContainerOffset
+  end
   dropdownRow[1]:setColSpan(2):createText(
     ReadText(PAGE_ID, 100),
     { halign = "left", titleColor = Color["row_title"], fontsize = fontSize }
