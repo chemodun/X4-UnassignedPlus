@@ -603,6 +603,7 @@ function usp.displayTabData(numDisplayed, instance, ftable, infoTableData)
         if v == false then allExpanded = false; break end
       end
       local grow = ftable:addRow("usp_grouped_header", Helper.headerRowProperties)
+      grow.properties.fixed = true
       grow[1]:createButton({ width = rowHeight }):setText(allExpanded and "-" or "+", { halign = "center" })
       grow[1].handlers.onClick = function()
         if allExpanded then
